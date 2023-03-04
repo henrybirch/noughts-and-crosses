@@ -40,27 +40,24 @@ const gameLogic = function (game: Game) {
     { x: 0, y: 2 },
   ];
   const allLines: Array<Line> = (function () {
-    const verticalLines: Array<Line> = [];
-    const horizontalLines: Array<Line> = [];
     const axis: Array<0 | 1 | 2> = [0, 1, 2];
+
+    const rows: Array<Line> = [];
+    const columns: Array<Line> = [];
+
     for (const coordinate of axis) {
-      verticalLines.push([
+      rows.push([
         { x: 0, y: coordinate },
         { x: 1, y: coordinate },
         { x: 2, y: coordinate },
       ]);
-      horizontalLines.push([
+      columns.push([
         { x: coordinate, y: 0 },
         { x: coordinate, y: 1 },
         { x: coordinate, y: 2 },
       ]);
     }
-    return [
-      ...verticalLines,
-      ...horizontalLines,
-      leftToRightDiagonal,
-      rightToLeftDiagonal,
-    ];
+    return [...rows, ...columns, leftToRightDiagonal, rightToLeftDiagonal];
   })();
   return { allLines };
 };
