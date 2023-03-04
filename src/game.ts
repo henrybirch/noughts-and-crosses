@@ -39,23 +39,28 @@ const gameLogic = function (game: Game) {
     { x: 0, y: 2 },
   ];
   const allLines: Array<Line> = (function () {
-    const lines: Array<Line> = [];
+    const verticalLines: Array<Line> = [];
+    const horizontalLines: Array<Line> = [];
     const axis: Array<0 | 1 | 2> = [0, 1, 2];
     for (const coordinate of axis) {
-      lines.push([
+      verticalLines.push([
         { x: 0, y: coordinate },
         { x: 1, y: coordinate },
         { x: 2, y: coordinate },
       ]);
-      lines.push([
+      horizontalLines.push([
         { x: coordinate, y: 0 },
         { x: coordinate, y: 1 },
         { x: coordinate, y: 2 },
       ]);
     }
-    return lines;
+    return [
+      ...verticalLines,
+      ...horizontalLines,
+      leftToRightDiagonal,
+      rightToLeftDiagonal,
+    ];
   })();
   return { allLines };
 };
-
 console.log(gameLogic(getFreshGame()).allLines);
