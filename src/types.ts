@@ -1,11 +1,11 @@
-enum Marker {
+export enum Marker {
   Nought = "O",
   Cross = "X",
 }
 
-type Position = Marker | null;
+export type Position = Marker | null;
 
-type Game = [
+export type Game = [
   [Position, Position, Position],
   [Position, Position, Position],
   [Position, Position, Position]
