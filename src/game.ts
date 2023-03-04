@@ -4,14 +4,15 @@ enum Marker {
 }
 
 type Position = Marker | null;
-type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
-type Line = [Square, Square, Square];
 
 type Game = [
   [Position, Position, Position],
   [Position, Position, Position],
   [Position, Position, Position]
 ];
+
+type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
+type Line = [Square, Square, Square];
 
 function getFreshGame(): Game {
   return [
