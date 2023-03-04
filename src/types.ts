@@ -10,3 +10,9 @@ export type Game = [
   [Position, Position, Position],
   [Position, Position, Position]
 ];
+
+export enum gameOutcome {
+  NoughtWin,
+  CrossWin,
+  Draw,
+}
