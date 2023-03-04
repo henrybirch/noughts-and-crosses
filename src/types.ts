@@ -4,6 +4,7 @@ export enum Marker {
 }
 
 export type Position = Marker | null;
+export type Coord = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
 
 export type Game = [
   [Position, Position, Position],
