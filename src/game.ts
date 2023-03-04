@@ -3,8 +3,10 @@ enum Marker {
   Cross = "X",
 }
 
+type Position = Marker | null;
+
 type Game = [
-  [Marker, Marker, Marker],
-  [Marker, Marker, Marker],
-  [Marker, Marker, Marker]
+  [Position, Position, Position],
+  [Position, Position, Position],
+  [Position, Position, Position]
 ];
