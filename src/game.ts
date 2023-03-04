@@ -4,7 +4,8 @@ enum Marker {
 }
 
 type Position = Marker | null;
-type Coord = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
+type Coordinates = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
+type Line = [Coordinates, Coordinates, Coordinates];
 
 type Game = [
   [Position, Position, Position],
@@ -27,6 +28,15 @@ enum gameOutcome {
 }
 
 const game = (game: Game) => {
-  const leftToRightDiagonal = [Coord.x];
-  const getOutcome = () => {};
+  const leftToRightDiagonal: Line = [
+    { x: 0, y: 0 },
+    { x: 1, y: 1 },
+    { x: 2, y: 2 },
+  ];
+  const rightToLeftDiagonal: Line = [
+    { x: 2, y: 0 },
+    { x: 1, y: 1 },
+    { x: 0, y: 2 },
+  ];
+  const allLines = () => {};
 };
