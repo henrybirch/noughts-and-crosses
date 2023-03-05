@@ -1,80 +1,100 @@
 enum Marker {
-    Nought = "O",
-    Cross = "X",
+  Nought = "O",
+  Cross = "X",
 }
 
 type Position = Marker | null;
 
 type Game = [
-    [Position, Position, Position],
-    [Position, Position, Position],
-    [Position, Position, Position]
+  [Position, Position, Position],
+  [Position, Position, Position],
+  [Position, Position, Position]
 ];
 
 type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
-type Line = [Square, Square, Square];
+type Squares = Array<Square>;
 
 function getFreshGame(): Game {
-    return [
-        [null, null, null],
-        [null, null, null],
-        [null, null, null],
-    ];
+  return [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ];
 }
 
 enum GameStatus {
-    NoughtWin,
-    CrossWin,
-    Draw,
-    Unfinished,
+  NoughtWin,
+  CrossWin,
+  Draw,
+  Unfinished,
 }
 
 const gameLogic = function (game: Game) {
-    function getAllLines() {
-        const axis: Array<0 | 1 | 2> = [0, 1, 2];
+  function getAllLines() {
+    const axis: Array<0 | 1 | 2> = [0, 1, 2];
 
-        const rows: Array<Line> = [];
-        const columns: Array<Line> = [];
+    const rows: Array<Squares> = [];
+    const columns: Array<Squares> = [];
 
-        for (const coordinate of axis) {
-            rows.push([
-                {x: 0, y: coordinate},
-                {x: 1, y: coordinate},
-                {x: 2, y: coordinate},
-            ]);
-            columns.push([
-                {x: coordinate, y: 0},
-                {x: coordinate, y: 1},
-                {x: coordinate, y: 2},
-            ]);
-        }
-
-        const leftToRightDiagonal = axis.map(coordinate => {
-            return {x: coordinate, y: coordinate}
-        })
-
-        const rightToLeftDiagonal = axis.map(coordinate => {
-            return {x: -coordinate, y: coordinate}
-        })
-        return [...rows, ...columns, leftToRightDiagonal, rightToLeftDiagonal];
+    for (const coordinate of axis) {
+      rows.push([
+        { x: 0, y: coordinate },
+        { x: 1, y: coordinate },
+        { x: 2, y: coordinate },
+      ]);
+      columns.push([
+        { x: coordinate, y: 0 },
+        { x: coordinate, y: 1 },
+        { x: coordinate, y: 2 },
+      ]);
     }
 
-    function getNumberOfThreeConsecutiveMarkers(marker: Marker) {
-        return getAllLines().filter((line) =>
-            line.every((square) => game[square.x][square.y] === marker)
-        ).length;
-    }
+    const leftToRightDiagonal = axis.map((coordinate) => {
+      return { x: coordinate, y: coordinate };
+    });
 
-    function get
+    const rightToLeftDiagonal = axis.map((coordinate) => {
+      return { x: -coordinate, y: coordinate };
+    });
+    return [...rows, ...columns, leftToRightDiagonal, rightToLeftDiagonal];
+  }
 
-    function getStatus(): GameStatus {
-        const numberOfCrossWins = getNumberOfThreeConsecutiveMarkers(Marker.Cross);
-        const numberOfNaughtWins = getNumberOfThreeConsecutiveMarkers(
-            Marker.Nought
-        );
-        if (numberOfCrossWins > 0 && numberOfNaughtWins > 0) {
-            throw Error("Invalid game: only one marker can win");
-        }
+  function getNumberOfThreeConsecutiveMarkers(marker: Marker) {
+    return getAllLines().filter((line) =>
+      line.every((square) => game[square.x][square.y] === marker)
+    ).length;
+  }
+
+  function areEmptySquares() {
+    return game.every((row) =>
+      row.every(
+        (position) => position === Marker.Nought || position === Marker.Cross
+      )
+    );
+  }
+
+  function getStatus(): GameStatus {
+    const numberOfCrossWins = getNumberOfThreeConsecutiveMarkers(Marker.Cross);
+    const numberOfNoughtWins = getNumberOfThreeConsecutiveMarkers(
+      Marker.Nought
+    );
+    if (numberOfCrossWins > 0 && numberOfNoughtWins > 0) {
+      throw Error("Invalid game: only one marker can win");
     }
+    if (numberOfCrossWins > 1 || numberOfNoughtWins > 1) {
+      throw Error(
+        "Invalid game: a game ends when 3 consecutive markers are placed"
+      );
+    }
+    if (numberOfCrossWins === 1) {
+      return GameStatus.CrossWin;
+    }
+    if (numberOfNoughtWins === 1) {
+      return GameStatus.NoughtWin;
+    }
+    if (areEmptySquares()) {
+      return GameStatus.Unfinished;
+    }
+    return GameStatus.Draw;
+  }
 };
-console.log(gameLogic(getFreshGame()).allLines);
