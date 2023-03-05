@@ -1,33 +1,31 @@
-enum Marker {
-  Nought = "O",
-  Cross = "X",
-}
+const Game = function () {
+  enum Marker {
+    Nought = "O",
+    Cross = "X",
+  }
 
-type Placement = { marker: Marker; turn: number };
-type Position = Placement | null;
+  type Placement = { marker: Marker; turn: number };
+  type Position = Placement | null;
 
-type Row = [Position, Position, Position];
-type Game = [Row, Row, Row];
+  type Row = [Position, Position, Position];
+  type Grid = [Row, Row, Row];
 
-type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
-type Squares = Array<Square>;
+  type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
+  type Squares = Array<Square>;
 
-function getFreshGame(): Game {
-  return [
+  enum GameStatus {
+    NoughtWin = "Naught Win",
+    CrossWin = "Cross Win",
+    Draw = "Draw",
+    Unfinished = "Unfinished",
+  }
+
+  const grid: Grid = [
     [null, null, null],
     [null, null, null],
     [null, null, null],
   ];
-}
 
-enum GameStatus {
-  NoughtWin = "Naught Win",
-  CrossWin = "Cross Win",
-  Draw = "Draw",
-  Unfinished = "Unfinished",
-}
-
-const gameLogic = function (game: Game) {
   function getAllLines(): Array<Squares> {
     const axis: Array<0 | 1 | 2> = [0, 1, 2];
 
@@ -59,12 +57,12 @@ const gameLogic = function (game: Game) {
 
   function getNumberOfThreeConsecutiveMarkers(marker: Marker): number {
     return getAllLines().filter((line) =>
-      line.every((square) => game[square.x][square.y]?.marker === marker)
+      line.every((square) => grid[square.x][square.y]?.marker === marker)
     ).length;
   }
 
   function areEmptySquares(): boolean {
-    return !game.every((row) => row.every((position) => position !== null));
+    return !grid.every((row) => row.every((position) => position !== null));
   }
 
   function getStatus(): GameStatus {
@@ -73,11 +71,11 @@ const gameLogic = function (game: Game) {
       Marker.Nought
     );
     if (numberOfCrossWins > 0 && numberOfNoughtWins > 0) {
-      throw Error("Invalid game: only one marker can win");
+      throw Error("Invalid grid: only one marker can win");
     }
     if (numberOfCrossWins > 1 || numberOfNoughtWins > 1) {
       throw Error(
-        "Invalid game: a game ends when 3 consecutive markers are placed"
+        "Invalid grid: a grid ends when 3 consecutive markers are placed"
       );
     }
     if (numberOfCrossWins === 1) {
@@ -97,7 +95,7 @@ const gameLogic = function (game: Game) {
       return position !== null;
     }
 
-    const placements = game.flatMap((row) => row.filter(isPlacement));
+    const placements = grid.flatMap((row) => row.filter(isPlacement));
     if (placements.length === 0) {
       return null;
     }
@@ -108,34 +106,23 @@ const gameLogic = function (game: Game) {
     );
   }
 
-  function placeMarker(marker: Marker, square: Square): Game {
+  function placeMarker(marker: Marker, square: Square): Grid {
     if (getStatus() !== GameStatus.Unfinished) {
-      throw Error("Cannot place marker in finished game");
+      throw Error("Cannot place marker in finished grid");
     }
     const mostRecentPlacement = getMostRecentPlacement();
     if (mostRecentPlacement?.marker === marker) {
       throw Error("Cannot place same marker in a succession");
     }
-    const stateOfSquare = game[square.x][square.y];
+    const stateOfSquare = grid[square.x][square.y];
     if (stateOfSquare !== null) {
       throw Error("Cannot place marker on another");
     }
     const thisTurn = mostRecentPlacement ? mostRecentPlacement.turn + 1 : 0;
 
-    const newGame: Game = [...game];
+    const newGame: Grid = [...grid];
     newGame[square.x][square.y] = { marker, turn: thisTurn };
     return newGame;
   }
-  return { placeMarker, getStatus, getMostRecentPlacement };
+  return { placeMarker };
 };
-
-const game = getFreshGame();
-const gameL = gameLogic(game);
-const realGame: Game = [
-  [{ marker: Marker.Nought, turn: 1 }, null, null],
-  [null, null, null],
-  [null, null, null],
-];
-const gameRL = gameLogic(realGame);
-
-console.log(gameL.placeMarker(Marker.Nought, { x: 0, y: 0 }));
