@@ -1,31 +1,30 @@
-const Game = function () {
-  enum Marker {
-    Nought = "O",
-    Cross = "X",
-  }
+enum Marker {
+  Nought = "O",
+  Cross = "X",
+}
 
-  type Placement = { marker: Marker; turn: number };
-  type Position = Placement | null;
+type Placement = { marker: Marker; turn: number };
+type Position = Placement | null;
 
-  type Row = [Position, Position, Position];
-  type Grid = [Row, Row, Row];
+type Row = [Position, Position, Position];
+type Grid = [Row, Row, Row];
 
-  type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
-  type Squares = Array<Square>;
+type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
+type Squares = Array<Square>;
 
-  enum GameStatus {
-    NoughtWin = "Naught Win",
-    CrossWin = "Cross Win",
-    Draw = "Draw",
-    Unfinished = "Unfinished",
-  }
+enum GameStatus {
+  NoughtWin = "Naught Win",
+  CrossWin = "Cross Win",
+  Draw = "Draw",
+  Unfinished = "Unfinished",
+}
 
-  const grid: Grid = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-  ];
-
+const grid: Grid = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+const Game = function (grid: Grid) {
   function getAllLines(): Array<Squares> {
     const axis: Array<0 | 1 | 2> = [0, 1, 2];
 
@@ -124,5 +123,5 @@ const Game = function () {
     newGame[square.x][square.y] = { marker, turn: thisTurn };
     return newGame;
   }
-  return { placeMarker };
+  return { placeMarker, getStatus };
 };
