@@ -5,11 +5,8 @@ enum Marker {
 
 type Position = Marker | null;
 
-type Game = [
-  [Position, Position, Position],
-  [Position, Position, Position],
-  [Position, Position, Position]
-];
+type Row = [Position, Position, Position];
+type Game = [Row, Row, Row];
 
 type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
 type Squares = Array<Square>;
