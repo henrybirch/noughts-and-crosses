@@ -20,10 +20,10 @@ function getFreshGame(): Game {
 }
 
 enum GameStatus {
-  NoughtWin,
-  CrossWin,
-  Draw,
-  Unfinished,
+  NoughtWin = "Naught Win",
+  CrossWin = "Cross Win",
+  Draw = "Draw",
+  Unfinished = "Unfinished",
 }
 
 const gameLogic = function (game: Game) {
