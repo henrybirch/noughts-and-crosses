@@ -22,10 +22,11 @@ function getFreshGame(): Game {
   ];
 }
 
-enum gameOutcome {
+enum GameStatus {
   NoughtWin,
   CrossWin,
   Draw,
+  Unfinished,
 }
 
 const gameLogic = function (game: Game) {
