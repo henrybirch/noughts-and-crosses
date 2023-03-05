@@ -30,7 +30,7 @@ enum GameStatus {
 }
 
 const gameLogic = function (game: Game) {
-  function getAllLines() {
+  function getAllLines(): Array<Squares> {
     const axis: Array<0 | 1 | 2> = [0, 1, 2];
 
     const rows: Array<Squares> = [];
@@ -54,18 +54,18 @@ const gameLogic = function (game: Game) {
     });
 
     const rightToLeftDiagonal = axis.map((coordinate) => {
-      return { x: -coordinate, y: coordinate };
+      return { x: axis[-coordinate], y: coordinate };
     });
     return [...rows, ...columns, leftToRightDiagonal, rightToLeftDiagonal];
   }
 
-  function getNumberOfThreeConsecutiveMarkers(marker: Marker) {
+  function getNumberOfThreeConsecutiveMarkers(marker: Marker): number {
     return getAllLines().filter((line) =>
       line.every((square) => game[square.x][square.y] === marker)
     ).length;
   }
 
-  function areEmptySquares() {
+  function areEmptySquares(): boolean {
     return game.every((row) =>
       row.every(
         (position) => position === Marker.Nought || position === Marker.Cross
