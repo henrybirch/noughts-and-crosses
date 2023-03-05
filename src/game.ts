@@ -63,7 +63,7 @@ const gameLogic = function (game: Game) {
   }
 
   function areEmptySquares(): boolean {
-    return game.every((row) =>
+    return !game.every((row) =>
       row.every(
         (position) => position === Marker.Nought || position === Marker.Cross
       )
