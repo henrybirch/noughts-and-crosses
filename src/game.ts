@@ -19,12 +19,15 @@ enum GameStatus {
   Unfinished = "Unfinished",
 }
 
-const grid: Grid = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
-const Game = function (grid: Grid) {
+export function getEmptyGrid() {
+  return [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ];
+}
+
+export const Game = function (grid: Grid) {
   function getAllLines(): Array<Squares> {
     const axis: Array<0 | 1 | 2> = [0, 1, 2];
 
@@ -123,5 +126,6 @@ const Game = function (grid: Grid) {
     newGame[square.x][square.y] = { marker, turn: thisTurn };
     return newGame;
   }
+
   return { placeMarker, getStatus };
 };
