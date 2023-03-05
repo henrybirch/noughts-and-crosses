@@ -108,28 +108,24 @@ const gameLogic = function (game: Game) {
     );
   }
 
-  function placeMarker(marker: Marker, square: Square) {
+  function placeMarker(marker: Marker, square: Square): Game {
     if (getStatus() !== GameStatus.Unfinished) {
       throw Error("Cannot place marker in finished game");
     }
-    if (getMostRecentPlacement()?.marker === marker) {
+    const mostRecentPlacement = getMostRecentPlacement();
+    if (mostRecentPlacement?.marker === marker) {
       throw Error("Cannot place same marker in a succession");
     }
     const stateOfSquare = game[square.x][square.y];
     if (stateOfSquare !== null) {
       throw Error("Cannot place marker on another");
     }
-    return game.map((row, x) => {
-      return row.map((position, y) => {
-        if (square.x == x && square.y == y) {
-          return marker;
-        } else {
-          return position;
-        }
-      });
-    });
-  }
+    const thisTurn = mostRecentPlacement ? mostRecentPlacement.turn + 1 : 0;
 
+    const newGame: Game = [...game];
+    newGame[square.x][square.y] = { marker, turn: thisTurn };
+    return newGame;
+  }
   return { placeMarker, getStatus, getMostRecentPlacement };
 };
 
@@ -141,4 +137,5 @@ const realGame: Game = [
   [null, null, null],
 ];
 const gameRL = gameLogic(realGame);
+
 console.log(gameL.placeMarker(Marker.Nought, { x: 0, y: 0 }));
