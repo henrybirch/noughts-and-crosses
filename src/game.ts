@@ -40,7 +40,8 @@ const gameLogic = function (game: Game) {
     { x: 1, y: 1 },
     { x: 0, y: 2 },
   ];
-  const allLines: Array<Line> = (function () {
+
+  function getAllLines() {
     const axis: Array<0 | 1 | 2> = [0, 1, 2];
 
     const rows: Array<Line> = [];
