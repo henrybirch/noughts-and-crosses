@@ -3,7 +3,8 @@ enum Marker {
   Cross = "X",
 }
 
-type Position = Marker | null;
+type Placement = { marker: Marker; turn: number };
+type Position = Placement | null;
 
 type Row = [Position, Position, Position];
 type Game = [Row, Row, Row];
@@ -58,16 +59,12 @@ const gameLogic = function (game: Game) {
 
   function getNumberOfThreeConsecutiveMarkers(marker: Marker): number {
     return getAllLines().filter((line) =>
-      line.every((square) => game[square.x][square.y] === marker)
+      line.every((square) => game[square.x][square.y]?.marker === marker)
     ).length;
   }
 
   function areEmptySquares(): boolean {
-    return !game.every((row) =>
-      row.every(
-        (position) => position === Marker.Nought || position === Marker.Cross
-      )
-    );
+    return !game.every((row) => row.every((position) => position !== null));
   }
 
   function getStatus(): GameStatus {
@@ -94,4 +91,54 @@ const gameLogic = function (game: Game) {
     }
     return GameStatus.Draw;
   }
+
+  function getMostRecentPlacement(): Placement | null {
+    function isPlacement(position: Position): position is Placement {
+      return position !== null;
+    }
+
+    const placements = game.flatMap((row) => row.filter(isPlacement));
+    if (placements.length === 0) {
+      return null;
+    }
+    return placements.reduce((mostRecentPlacement, currentPlacement) =>
+      mostRecentPlacement.turn < currentPlacement.turn
+        ? currentPlacement
+        : mostRecentPlacement
+    );
+  }
+
+  function placeMarker(marker: Marker, square: Square) {
+    if (getStatus() !== GameStatus.Unfinished) {
+      throw Error("Cannot place marker in finished game");
+    }
+    if (getMostRecentPlacement()?.marker === marker) {
+      throw Error("Cannot place same marker in a succession");
+    }
+    const stateOfSquare = game[square.x][square.y];
+    if (stateOfSquare !== null) {
+      throw Error("Cannot place marker on another");
+    }
+    return game.map((row, x) => {
+      return row.map((position, y) => {
+        if (square.x == x && square.y == y) {
+          return marker;
+        } else {
+          return position;
+        }
+      });
+    });
+  }
+
+  return { placeMarker, getStatus, getMostRecentPlacement };
 };
+
+const game = getFreshGame();
+const gameL = gameLogic(game);
+const realGame: Game = [
+  [{ marker: Marker.Nought, turn: 1 }, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+const gameRL = gameLogic(realGame);
+console.log(gameL.placeMarker(Marker.Nought, { x: 0, y: 0 }));
