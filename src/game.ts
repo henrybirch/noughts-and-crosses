@@ -1,18 +1,18 @@
-enum Marker {
+export enum Marker {
   Nought = "O",
   Cross = "X",
 }
 
-type Placement = { marker: Marker; turn: number };
-type Position = Placement | null;
+export type Placement = { marker: Marker; turn: number };
+export type Position = Placement | null;
 
-type Row = [Position, Position, Position];
-type Grid = [Row, Row, Row];
+export type Row = [Position, Position, Position];
+export type Grid = [Row, Row, Row];
 
-type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
-type Squares = Array<Square>;
+export type Square = { x: 0 | 1 | 2; y: 0 | 1 | 2 };
+export type Squares = Array<Square>;
 
-enum GameStatus {
+export enum GameStatus {
   NoughtWin = "Naught Win",
   CrossWin = "Cross Win",
   Draw = "Draw",
