@@ -21,7 +21,11 @@ interface OccupiedSquare extends Square {
   turn: Turn;
 }
 
-interface UnoccupiedSquare extends Square {}
+interface UnoccupiedSquare extends Square {
+  isOccupied: false;
+}
+
+const anUnoccupiedSquare: UnoccupiedSquare = { isOccupied: false };
 
 type GameBoard = [
   [Square, Square, Square],
