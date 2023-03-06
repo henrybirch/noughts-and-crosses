@@ -1,46 +1,46 @@
-type Coordinate = 0 | 1 | 2;
+export type Coordinate = 0 | 1 | 2;
 
-interface Coordinates {
+export interface Coordinates {
   x: Coordinate;
   y: Coordinate;
 }
 
-enum Marker {
+export enum Marker {
   Nought = "O",
   Cross = "X",
 }
 
-interface Square {
+export interface Square {
   isOccupied: Boolean;
 }
 
-type Turn = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+export type Turn = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
-interface OccupiedSquare extends Square {
+export interface OccupiedSquare extends Square {
   marker: Marker;
   turn: Turn;
 }
 
-interface UnoccupiedSquare extends Square {
+export interface UnoccupiedSquare extends Square {
   isOccupied: false;
 }
 
-const anUnoccupiedSquare: UnoccupiedSquare = { isOccupied: false };
+export const anUnoccupiedSquare: UnoccupiedSquare = { isOccupied: false };
 
-type GameBoard = [
+export type GameBoard = [
   [Square, Square, Square],
   [Square, Square, Square],
   [Square, Square, Square]
 ];
 
-enum GameStatus {
+export enum GameStatus {
   NoughtWin = "Nought Win",
   CrossWin = "Cross Win",
   Draw = "Draw",
   Unfinished = "Unfinished",
 }
 
-interface Game {
+export interface Game {
   gameBoard: GameBoard;
   placeMarker: (marker: Marker) => GameBoard;
   gameStatus: GameStatus;
