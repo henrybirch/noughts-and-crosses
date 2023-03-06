@@ -1,37 +1,39 @@
-import { Record } from "immutable";
+import { Record, RecordOf } from "immutable";
 import { Marker } from "./marker";
-
-export interface SquareProps {
-  isOccupied: Boolean;
-}
-
-export interface UnoccupiedSquareProps {
-  isOccupied: false;
-}
 
 export type Turn = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-export interface OccupiedSquareProps {
+interface SquareProps {
+  isOccupied: Boolean;
+  marker?: Marker;
+  turn?: Turn;
+}
+
+interface UnoccupiedSquareProps extends SquareProps {
+  isOccupied: false;
+}
+
+interface OccupiedSquareProps extends SquareProps {
   isOccupied: true;
   marker: Marker;
   turn: Turn;
 }
 
-export const UnoccupiedSquare: Record<UnoccupiedSquareProps> = (() => {
-  const anUnoccupiedSquare: UnoccupiedSquareProps = { isOccupied: false };
-  const unoccupiedSquareFactory = Record(anUnoccupiedSquare);
-  return unoccupiedSquareFactory();
+export type Square = RecordOf<SquareProps>;
+export type OccupiedSquare = RecordOf<OccupiedSquareProps> & Square;
+export type UnoccupiedSquare = RecordOf<UnoccupiedSquareProps> & Square;
+
+export const UnoccupiedSquare: UnoccupiedSquare = (function () {
+  const unoccupiedSquareProps: UnoccupiedSquareProps = { isOccupied: false };
+  const factory = Record(unoccupiedSquareProps);
+  return factory();
 })();
 
-export const OccupiedSquare: Record.Factory<OccupiedSquareProps> = (() => {
-  const anOccupiedSquareProps: OccupiedSquareProps = {
+export const getOccupiedSquare: Record.Factory<OccupiedSquareProps> = (() => {
+  const occupiedSquareProps: OccupiedSquareProps = {
     isOccupied: true,
-    marker: Marker.Nought,
     turn: 0,
+    marker: Marker.Nought,
   };
-  return Record(anOccupiedSquareProps);
+  return Record(occupiedSquareProps);
 })();
-
-export type Square = Record<SquareProps>;
-export type UnoccupiedSquare = Record<UnoccupiedSquareProps>;
-export type OccupiedSquare = Record<OccupiedSquareProps>;
