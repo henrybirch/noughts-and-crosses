@@ -1,6 +1,6 @@
 import { anUnoccupiedSquare, GameBoard } from "./interfaces";
 
-export function makeNewGame(): GameBoard {
+export function makeNewGameBoard(): GameBoard {
   return [
     [anUnoccupiedSquare, anUnoccupiedSquare, anUnoccupiedSquare],
     [anUnoccupiedSquare, anUnoccupiedSquare, anUnoccupiedSquare],
