@@ -6,3 +6,5 @@ export const Coordinates: Record.Factory<CoordinatesProps> = (function () {
   const someCoordinatesProps: CoordinatesProps = { x: 0, y: 0 };
   return Record(someCoordinatesProps);
 })();
+
+export type Coordinates = Record<CoordinatesProps>;

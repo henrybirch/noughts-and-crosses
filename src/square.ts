@@ -31,3 +31,7 @@ export const OccupiedSquare: Record.Factory<OccupiedSquareProps> = (() => {
   };
   return Record(anOccupiedSquareProps);
 })();
+
+export type Square = Record<SquareProps>;
+export type UnoccupiedSquare = Record<UnoccupiedSquareProps>;
+export type OccupiedSquare = Record<OccupiedSquareProps>;
