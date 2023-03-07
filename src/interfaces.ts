@@ -18,7 +18,7 @@ type GameOutcome = Either<Draw, Win>;
 
 interface FinishedGame {
   readonly outcome: GameOutcome;
-  readonly gameBoard: GameBoard;
+  readonly board: Board;
 }
 
 type GameState = Either<OngoingGame, FinishedGame>;
@@ -34,7 +34,7 @@ interface OngoingGame {
     marker: Marker
   ) => PlaceMarkerOutcome;
 
-  readonly gameBoard: GameBoard;
+  readonly board: Board;
 }
 
 type Square = Option<Marker>;
