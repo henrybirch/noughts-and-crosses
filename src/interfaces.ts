@@ -10,11 +10,14 @@ interface Win {
   readonly marker: Marker;
 }
 
-type Draw = "Draw";
-type Outcome = Either<Draw, Win>;
+enum Draw {
+  Draw = "Draw",
+}
+
+type GameOutcome = Either<Draw, Win>;
 
 interface FinishedGame {
-  readonly outcome: Outcome;
+  readonly outcome: GameOutcome;
   readonly gameBoard: GameBoard;
 }
 
@@ -35,5 +38,14 @@ interface OngoingGame {
 }
 
 type Square = Option<Marker>;
-type Row = readonly [Square, Square, Square];
-type GameBoard = readonly [Row, Row, Row];
+
+type ThreeLengthArray<A> = {
+  readonly [0]: A;
+  readonly [1]: A;
+  readonly [2]: A;
+  map<B>(
+    f: (value: A, index: Coordinate, array: ThreeLengthArray<A>) => B
+  ): ThreeLengthArray<B>;
+};
+type Row = ThreeLengthArray<Square>;
+type Board = ThreeLengthArray<Row>;
