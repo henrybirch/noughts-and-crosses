@@ -1,5 +1,8 @@
 export type Coordinate = 0 | 1 | 2;
 export type Coordinates = { readonly y: Coordinate; readonly x: Coordinate };
+function getCoordinates(x: Coordinate, y: Coordinate) {
+  return { x, y };
+}
 export type Marker = "O" | "X";
 export type Square = Marker | null;
 
@@ -26,10 +29,6 @@ export const emptyBoard: Board = [
   [null, null, null],
   [null, null, null],
 ];
-
-function getCoordinates(x: Coordinate, y: Coordinate) {
-  return { x, y };
-}
 
 const allLines: ThreeArray<Coordinates>[] = (() => {
   const allCoordinate: ThreeArray<Coordinate> = [0, 1, 2];
