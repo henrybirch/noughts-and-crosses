@@ -7,3 +7,9 @@ type ThreeArray<A> = readonly [A, A, A];
 
 export type Row = ThreeArray<Square>;
 export type Board = ThreeArray<Row>;
+
+export const emptyBoard: Board = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
