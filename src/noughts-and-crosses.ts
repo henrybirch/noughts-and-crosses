@@ -26,3 +26,37 @@ export const emptyBoard: Board = [
   [null, null, null],
   [null, null, null],
 ];
+
+function getCoordinates(x: Coordinate, y: Coordinate) {
+  return { x, y };
+}
+
+const allLines: ThreeArray<Coordinates>[] = (() => {
+  const allCoordinate: ThreeArray<Coordinate> = [0, 1, 2];
+  const coordinateMap = threeArrayMap(allCoordinate);
+
+  function getRow(y: Coordinate): ThreeArray<Coordinates> {
+    return coordinateMap((x: Coordinate) => getCoordinates(x, y));
+  }
+
+  function getColumn(x: Coordinate): ThreeArray<Coordinates> {
+    return coordinateMap((y: Coordinate) => getCoordinates(x, y));
+  }
+
+  const allRows = allCoordinate.map(getRow);
+  const allColumns = allCoordinate.map(getColumn);
+
+  const topLeftToBottomRightDiagonal = coordinateMap((c: Coordinate) =>
+    getCoordinates(c, c)
+  );
+  const reversedCoordinate = [...allCoordinate].reverse();
+  const topRightToBottomLeftDiagonal = coordinateMap((c, i) =>
+    getCoordinates(reversedCoordinate[i], c)
+  );
+  return [
+    ...allRows,
+    ...allColumns,
+    topRightToBottomLeftDiagonal,
+    topLeftToBottomRightDiagonal,
+  ];
+})();
