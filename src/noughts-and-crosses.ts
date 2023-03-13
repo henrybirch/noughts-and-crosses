@@ -1,8 +1,10 @@
 export type Coordinate = 0 | 1 | 2;
 export type Coordinates = { readonly y: Coordinate; readonly x: Coordinate };
+
 function getCoordinates(x: Coordinate, y: Coordinate) {
   return { x, y };
 }
+
 export type Marker = "O" | "X";
 export type Square = Marker | null;
 
@@ -42,8 +44,8 @@ const allLines: ThreeArray<Coordinates>[] = (() => {
     return coordinateMap((y: Coordinate) => getCoordinates(x, y));
   }
 
-  const allRows = allCoordinate.map(getRow);
-  const allColumns = allCoordinate.map(getColumn);
+  const allRows = coordinateMap(getRow);
+  const allColumns = coordinateMap(getColumn);
 
   const topLeftToBottomRightDiagonal = coordinateMap((c: Coordinate) =>
     getCoordinates(c, c)
@@ -59,3 +61,53 @@ const allLines: ThreeArray<Coordinates>[] = (() => {
     topLeftToBottomRightDiagonal,
   ];
 })();
+
+interface Game {
+  board: Board;
+  moves: Marker[];
+}
+
+type GameInProgress = Game;
+
+enum Result {
+  CrossWin = "CrossWin",
+  NoughtWin = "NoughtWin",
+  Draw = "Draw",
+}
+
+type FinishedGame = Game & {
+  result: Result;
+};
+
+function firstMove(c: Coordinates, m: Marker): GameInProgress {
+  const newBoard = threeArrayMap(emptyBoard)((row, y) =>
+    threeArrayMap(row)((square, x) => (c.x === x && c.y === y ? m : square))
+  );
+  return { board: newBoard, moves: [m] };
+}
+
+enum InvalidMove {
+  SquareAlreadyOccupied = "SquareAlreadyOccupied",
+  WrongMoveOrder = "WrongMoveOrder",
+}
+
+function getResult(b: Board): Result | null {
+  function isMarkerWin(m: Marker): boolean {
+    return allLines.some((line) =>
+      line.every((coordinates) => b[coordinates.y][coordinates.x] === m)
+    );
+  }
+
+  if (isMarkerWin("O")) {
+    return Result.NoughtWin;
+  }
+  if (isMarkerWin("X")) {
+    return Result.CrossWin;
+  }
+  if (b.every((row) => row.every((square) => square !== null))) {
+    return Result.Draw;
+  }
+  return null;
+}
+
+function move(g: GameInProgress, c: Coordinates, m: Marker) {}
