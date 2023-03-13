@@ -103,16 +103,16 @@ function getResult(b: Board): Result | null {
   return null;
 }
 
-function updateGameState(game: Game): GameInProgress | FinishedGame {
-  switch (getResult(game.board)) {
+function updateGameState(g: Game): GameInProgress | FinishedGame {
+  switch (getResult(g.board)) {
     case null:
-      return { board: game.board, moves: game.moves };
+      return { board: g.board, moves: g.moves };
     case Result.Draw:
-      return { board: game.board, moves: game.moves, result: Result.Draw };
+      return { board: g.board, moves: g.moves, result: Result.Draw };
     case Result.CrossWin:
-      return { board: game.board, moves: game.moves, result: Result.CrossWin };
+      return { board: g.board, moves: g.moves, result: Result.CrossWin };
     case Result.NoughtWin:
-      return { board: game.board, moves: game.moves, result: Result.NoughtWin };
+      return { board: g.board, moves: g.moves, result: Result.NoughtWin };
   }
 }
 
