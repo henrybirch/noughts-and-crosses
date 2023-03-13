@@ -79,13 +79,6 @@ type FinishedGame = Game & {
   result: Result;
 };
 
-export function firstMove(c: Coordinates, m: Marker): GameInProgress {
-  const newBoard = threeArrayMap(emptyBoard)((row, y) =>
-    threeArrayMap(row)((square, x) => (c.x === x && c.y === y ? m : square))
-  );
-  return { board: newBoard, moves: [m] };
-}
-
 enum InvalidMove {
   SquareAlreadyOccupied = "SquareAlreadyOccupied",
   WrongMoveOrder = "WrongMoveOrder",
@@ -110,6 +103,29 @@ function getResult(b: Board): Result | null {
   return null;
 }
 
+function getGameState(
+  result: Result | null,
+  board: Board,
+  moves: Marker[]
+): GameInProgress | FinishedGame {
+  switch (result) {
+    case null:
+      return { board: board, moves: moves };
+    case Result.Draw:
+      return { board: board, moves: moves, result: Result.Draw };
+    case Result.CrossWin:
+      return { board: board, moves: moves, result: Result.CrossWin };
+    case Result.NoughtWin:
+      return { board: board, moves: moves, result: Result.NoughtWin };
+  }
+}
+
+export function firstMove(c: Coordinates, m: Marker): GameInProgress {
+  const newBoard = threeArrayMap(emptyBoard)((row, y) =>
+    threeArrayMap(row)((square, x) => (c.x === x && c.y === y ? m : square))
+  );
+  return { board: newBoard, moves: [m] };
+}
 export function move(
   g: GameInProgress,
   c: Coordinates,
@@ -127,21 +143,4 @@ export function move(
   const result = getResult(newBoard);
   const newMoves = g.moves.concat([m]);
   return getGameState(result, newBoard, newMoves);
-}
-
-function getGameState(
-  result: Result | null,
-  board: Board,
-  moves: Marker[]
-): GameInProgress | FinishedGame {
-  switch (result) {
-    case null:
-      return { board: board, moves: moves };
-    case Result.Draw:
-      return { board: board, moves: moves, result: Result.Draw };
-    case Result.CrossWin:
-      return { board: board, moves: moves, result: Result.CrossWin };
-    case Result.NoughtWin:
-      return { board: board, moves: moves, result: Result.NoughtWin };
-  }
 }
