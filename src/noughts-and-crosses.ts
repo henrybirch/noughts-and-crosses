@@ -84,10 +84,10 @@ enum InvalidMove {
   WrongMoveOrder = "WrongMoveOrder",
 }
 
-function getResult(b: Board): Result | null {
+function getResult(board: Board): Result | null {
   function isMarkerWin(m: Marker): boolean {
     return allLines.some((line) =>
-      line.every((coordinates) => b[coordinates.y][coordinates.x] === m)
+      line.every((coordinates) => board[coordinates.y][coordinates.x] === m)
     );
   }
 
@@ -97,45 +97,44 @@ function getResult(b: Board): Result | null {
   if (isMarkerWin("X")) {
     return Result.CrossWin;
   }
-  if (b.every((row) => row.every((square) => square !== null))) {
+  if (board.every((row) => row.every((square) => square !== null))) {
     return Result.Draw;
   }
   return null;
 }
 
-function updateGameState(g: Game): GameInProgress | FinishedGame {
-  switch (getResult(g.board)) {
+function updateGameState(game: Game): GameInProgress | FinishedGame {
+  switch (getResult(game.board)) {
     case null:
-      return { board: g.board, moves: g.moves };
+      return game;
     case Result.Draw:
-      return { board: g.board, moves: g.moves, result: Result.Draw };
+      return { ...game, result: Result.Draw };
     case Result.CrossWin:
-      return { board: g.board, moves: g.moves, result: Result.CrossWin };
+      return { ...game, result: Result.CrossWin };
     case Result.NoughtWin:
-      return { board: g.board, moves: g.moves, result: Result.NoughtWin };
+      return { ...game, result: Result.NoughtWin };
   }
 }
 
-export function firstMove(c: Coordinates, m: Marker): GameInProgress {
-  const newBoard = threeArrayMap(emptyBoard)((row, y) =>
-    threeArrayMap(row)((square, x) => (c.x === x && c.y === y ? m : square))
-  );
-  return { board: newBoard, moves: [m] };
-}
+type Move = { readonly marker: Marker; readonly coordinates: Coordinates };
 
-export function move(
-  g: GameInProgress,
-  c: Coordinates,
-  m: Marker
+export function doMove(
+  gameInProgress: GameInProgress,
+  move: Move
 ): FinishedGame | GameInProgress | InvalidMove {
-  if (g.board[c.y][c.x] !== null) {
+  if (gameInProgress.board[move.coordinates.y][move.coordinates.x] !== null) {
     return InvalidMove.SquareAlreadyOccupied;
   }
-  if (g.moves[-1] === m) {
+  if (gameInProgress.moves[-1] === move.marker) {
     return InvalidMove.WrongMoveOrder;
   }
-  const newBoard = threeArrayMap(g.board)((row, y) =>
-    threeArrayMap(row)((square, x) => (c.x == x && c.y == y ? m : square))
+  const newBoard = threeArrayMap(gameInProgress.board)((row, y) =>
+    threeArrayMap(row)((square, x) =>
+      move.coordinates.x == x && move.coordinates.y == y ? move.marker : square
+    )
   );
-  return updateGameState({ board: newBoard, moves: g.moves.concat([m]) });
+  return updateGameState({
+    board: newBoard,
+    moves: gameInProgress.moves.concat([move.marker]),
+  });
 }
