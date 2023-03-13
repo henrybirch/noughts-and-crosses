@@ -1,3 +1,5 @@
+import { Either, left, right } from "fp-ts/Either";
+
 export type Coordinate = 0 | 1 | 2;
 export type Coordinates = { readonly y: Coordinate; readonly x: Coordinate };
 
@@ -62,12 +64,10 @@ const allLines: ThreeArray<Coordinates>[] = (() => {
   ];
 })();
 
-interface Game {
+type Game = {
   board: Board;
   moves: Marker[];
-}
-
-type GameInProgress = Game;
+};
 
 enum Result {
   CrossWin = "CrossWin",
@@ -103,38 +103,40 @@ function getResult(board: Board): Result | null {
   return null;
 }
 
-function updateGameState(game: Game): GameInProgress | FinishedGame {
+function updateGameState(game: Game): Either<Game, FinishedGame> {
   switch (getResult(game.board)) {
     case null:
-      return game;
+      return left(game);
     case Result.Draw:
-      return { ...game, result: Result.Draw };
+      return right({ ...game, result: Result.Draw });
     case Result.CrossWin:
-      return { ...game, result: Result.CrossWin };
+      return right({ ...game, result: Result.CrossWin });
     case Result.NoughtWin:
-      return { ...game, result: Result.NoughtWin };
+      return right({ ...game, result: Result.NoughtWin });
   }
 }
 
 type Move = { readonly marker: Marker; readonly coordinates: Coordinates };
 
 export function doMove(
-  gameInProgress: GameInProgress,
+  game: Game,
   move: Move
-): FinishedGame | GameInProgress | InvalidMove {
-  if (gameInProgress.board[move.coordinates.y][move.coordinates.x] !== null) {
-    return InvalidMove.SquareAlreadyOccupied;
+): Either<InvalidMove, Either<Game, FinishedGame>> {
+  if (game.board[move.coordinates.y][move.coordinates.x] !== null) {
+    return left(InvalidMove.SquareAlreadyOccupied);
   }
-  if (gameInProgress.moves[-1] === move.marker) {
-    return InvalidMove.WrongMoveOrder;
+  if (game.moves[-1] === move.marker) {
+    return left(InvalidMove.WrongMoveOrder);
   }
-  const newBoard = threeArrayMap(gameInProgress.board)((row, y) =>
+  const newBoard = threeArrayMap(game.board)((row, y) =>
     threeArrayMap(row)((square, x) =>
       move.coordinates.x == x && move.coordinates.y == y ? move.marker : square
     )
   );
-  return updateGameState({
-    board: newBoard,
-    moves: gameInProgress.moves.concat([move.marker]),
-  });
+  return right(
+    updateGameState({
+      board: newBoard,
+      moves: game.moves.concat([move.marker]),
+    })
+  );
 }
