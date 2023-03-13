@@ -110,4 +110,38 @@ function getResult(b: Board): Result | null {
   return null;
 }
 
-function move(g: GameInProgress, c: Coordinates, m: Marker) {}
+function move(
+  g: GameInProgress,
+  c: Coordinates,
+  m: Marker
+): FinishedGame | GameInProgress | InvalidMove {
+  if (g.board[c.y][c.x] !== null) {
+    return InvalidMove.SquareAlreadyOccupied;
+  }
+  if (g.moves[-1] === m) {
+    return InvalidMove.WrongMoveOrder;
+  }
+  const newBoard = threeArrayMap(g.board)((row, y) =>
+    threeArrayMap(row)((square, x) => (c.x == x && c.y == y ? m : square))
+  );
+  const result = getResult(newBoard);
+  const newMoves = g.moves.concat([m]);
+  return getGameState(result, newBoard, newMoves);
+}
+
+function getGameState(
+  result: Result | null,
+  board: Board,
+  moves: Marker[]
+): GameInProgress | FinishedGame {
+  switch (result) {
+    case null:
+      return { board: board, moves: moves };
+    case Result.Draw:
+      return { board: board, moves: moves, result: Result.Draw };
+    case Result.CrossWin:
+      return { board: board, moves: moves, result: Result.CrossWin };
+    case Result.NoughtWin:
+      return { board: board, moves: moves, result: Result.NoughtWin };
+  }
+}
