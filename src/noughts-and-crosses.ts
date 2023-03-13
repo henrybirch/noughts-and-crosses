@@ -118,6 +118,10 @@ function updateGameState(game: Game): Either<Game, FinishedGame> {
 
 type Move = { readonly marker: Marker; readonly coordinates: Coordinates };
 
+export function getNewGame(): Game {
+  return { board: emptyBoard, moves: [] };
+}
+
 export function doMove(
   game: Game,
   move: Move
