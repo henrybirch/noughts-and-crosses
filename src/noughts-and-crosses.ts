@@ -79,11 +79,6 @@ export type FinishedGame = Game & {
   result: Result;
 };
 
-export enum InvalidMove {
-  SquareAlreadyOccupied = "SquareAlreadyOccupied",
-  WrongMoveOrder = "WrongMoveOrder",
-}
-
 function getResult(board: Board): Result | null {
   function isMarkerWin(m: Marker): boolean {
     return allLines.some((line) =>
@@ -125,6 +120,10 @@ export function getNewGame(): Game {
   return { board: emptyBoard, moves: [] };
 }
 
+export enum InvalidMove {
+  SquareAlreadyOccupied = "SquareAlreadyOccupied",
+  WrongMoveOrder = "WrongMoveOrder",
+}
 export function doMove(
   game: Game,
   move: Move
