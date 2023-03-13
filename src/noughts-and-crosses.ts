@@ -13,14 +13,14 @@ type ThreeArray<A> = readonly [A, A, A];
 function threeArrayMap<A>(
   a: ThreeArray<A>
 ): <B>(f: ((v: A, i: Coordinate) => B) | ((v: A) => B)) => ThreeArray<B> {
-  function returnFunction<B>(
+  function map<B>(
     f: ((v: A, i: Coordinate) => B) | ((v: A) => B)
   ): ThreeArray<B> {
     const g = (x: Coordinate) => f(a[x], x);
     return [g(0), g(1), g(2)];
   }
 
-  return returnFunction;
+  return map;
 }
 
 export type Row = ThreeArray<Square>;
