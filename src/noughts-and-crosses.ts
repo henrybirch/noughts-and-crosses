@@ -79,7 +79,7 @@ type FinishedGame = Game & {
   result: Result;
 };
 
-function firstMove(c: Coordinates, m: Marker): GameInProgress {
+export function firstMove(c: Coordinates, m: Marker): GameInProgress {
   const newBoard = threeArrayMap(emptyBoard)((row, y) =>
     threeArrayMap(row)((square, x) => (c.x === x && c.y === y ? m : square))
   );
@@ -110,7 +110,7 @@ function getResult(b: Board): Result | null {
   return null;
 }
 
-function move(
+export function move(
   g: GameInProgress,
   c: Coordinates,
   m: Marker
