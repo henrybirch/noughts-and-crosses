@@ -103,20 +103,16 @@ function getResult(b: Board): Result | null {
   return null;
 }
 
-function getGameState(
-  result: Result | null,
-  board: Board,
-  moves: Marker[]
-): GameInProgress | FinishedGame {
-  switch (result) {
+function updateGameState(game: Game): GameInProgress | FinishedGame {
+  switch (getResult(game.board)) {
     case null:
-      return { board: board, moves: moves };
+      return { board: game.board, moves: game.moves };
     case Result.Draw:
-      return { board: board, moves: moves, result: Result.Draw };
+      return { board: game.board, moves: game.moves, result: Result.Draw };
     case Result.CrossWin:
-      return { board: board, moves: moves, result: Result.CrossWin };
+      return { board: game.board, moves: game.moves, result: Result.CrossWin };
     case Result.NoughtWin:
-      return { board: board, moves: moves, result: Result.NoughtWin };
+      return { board: game.board, moves: game.moves, result: Result.NoughtWin };
   }
 }
 
@@ -126,6 +122,7 @@ export function firstMove(c: Coordinates, m: Marker): GameInProgress {
   );
   return { board: newBoard, moves: [m] };
 }
+
 export function move(
   g: GameInProgress,
   c: Coordinates,
@@ -140,7 +137,5 @@ export function move(
   const newBoard = threeArrayMap(g.board)((row, y) =>
     threeArrayMap(row)((square, x) => (c.x == x && c.y == y ? m : square))
   );
-  const result = getResult(newBoard);
-  const newMoves = g.moves.concat([m]);
-  return getGameState(result, newBoard, newMoves);
+  return updateGameState({ board: newBoard, moves: g.moves.concat([m]) });
 }
