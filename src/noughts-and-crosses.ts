@@ -28,7 +28,7 @@ function threeArrayMap<A>(
 export type Row = ThreeArray<Square>;
 export type Board = ThreeArray<Row>;
 
-export const emptyBoard: Board = [
+const emptyBoard: Board = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
@@ -64,22 +64,22 @@ const allLines: ThreeArray<Coordinates>[] = (() => {
   ];
 })();
 
-type Game = {
+export type Game = {
   board: Board;
   moves: Marker[];
 };
 
-enum Result {
+export enum Result {
   CrossWin = "CrossWin",
   NoughtWin = "NoughtWin",
   Draw = "Draw",
 }
 
-type FinishedGame = Game & {
+export type FinishedGame = Game & {
   result: Result;
 };
 
-enum InvalidMove {
+export enum InvalidMove {
   SquareAlreadyOccupied = "SquareAlreadyOccupied",
   WrongMoveOrder = "WrongMoveOrder",
 }
@@ -116,7 +116,10 @@ function updateGameState(game: Game): Either<Game, FinishedGame> {
   }
 }
 
-type Move = { readonly marker: Marker; readonly coordinates: Coordinates };
+export type Move = {
+  readonly marker: Marker;
+  readonly coordinates: Coordinates;
+};
 
 export function getNewGame(): Game {
   return { board: emptyBoard, moves: [] };
